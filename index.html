@@ -1,0 +1,890 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tool PA acuta">
+<meta name="theme-color" content="#FAF9F7">
+<script data-iphone="sentinella">
+(function(){
+var h=document.documentElement, msg="";
+function ha(c){ return (" "+h.className+" ").indexOf(" "+c+" ")>=0; }
+// L'errore puo' arrivare prima che l'avviso esista — uno script in <head> che
+// non si lascia leggere —: il messaggio si tiene da parte e si scrive quando
+// la pagina c'e'.
+function scrivi(){
+  var e=document.getElementById("nmerr");
+  if(e&&msg) e.textContent="Errore del motore: "+msg;
+}
+function ko(m){
+  if(m&&!msg) msg=m;
+  if(!ha("motore-ko")) h.className+=" motore-ko";
+  scrivi();
+}
+h.className+=" js";
+window.onerror=function(m,src,riga,col){
+  m=String(m);
+  if(/^Script error\.?$/.test(m)) m="il browser non ne mostra il dettaglio (\u00abScript error.\u00bb)";
+  ko(m+(riga?" (riga "+riga+(col?", colonna "+col:"")+")":""));
+};
+document.addEventListener("DOMContentLoaded",function(){
+  if(!ha("motore-ok")) ko(msg||"il motore non ha completato l'avvio"); else scrivi();
+});
+})();
+</script>
+<title>PA nella fase acuta — bersagli e farmaci</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+  :root {
+    --bg:#FAF9F7; --surface:#FFFFFF; --surface-alt:#F3F2EF;
+    --border:rgba(11,11,11,0.10); --border-strong:rgba(11,11,11,0.18);
+    --text-primary:#0B0B0B; --text-secondary:#52514E; --text-muted:#76746F;
+    --accent-blue:#2A78D6;   --accent-blue-bg:#E6F1FB;   --accent-blue-border:#B5D4F4;
+    --accent-amber:#BA7517;  --accent-amber-bg:#FAEEDA;  --accent-amber-border:#FAC775;
+    --accent-red:#A32D2D;    --accent-red-bg:#FCEBEB;    --accent-red-border:#F7C1C1;
+    --accent-green:#3B6D11;  --accent-green-bg:#EAF3DE;  --accent-green-border:#C0DD97;
+    --accent-purple:#534AB7; --accent-purple-bg:#EEEDFE; --accent-purple-border:#CECBF6;
+    --cor-1:#3B8E5A; --cor-2a:#E0A82E; --cor-2b:#DE7E3C; --cor-3:#B33A3A;
+    --k0:#2E7D4F; --k0-bg:#E2F3E8; --k0-bd:#A6D9B8;
+    --k1:#2A78D6; --k1-bg:#E3EFFB; --k1-bd:#A9CBF1;
+    --k2:#8A6A00; --k2-bg:#FBF3C8; --k2-bd:#EBD56C;
+    --k3:#B45309; --k3-bg:#FDEBD8; --k3-bd:#F4BD85;
+    --k4:#A32D2D; --k4-bg:#FCE3E3; --k4-bd:#F0A9A9;
+    --grid:rgba(42,120,214,.08);
+    --font:'IBM Plex Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --display:'IBM Plex Sans Condensed','Arial Narrow',-apple-system,'Segoe UI',sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,Consolas,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#111418; --surface:#181C22; --surface-alt:#20252D;
+      --border:rgba(255,255,255,.10); --border-strong:rgba(255,255,255,.19);
+      --text-primary:#E7EAEE; --text-secondary:#B8BEC7; --text-muted:#949BA5;
+      --accent-blue:#72AAEE;   --accent-blue-bg:#18283A;   --accent-blue-border:#2E4B6C;
+      --accent-amber:#E3A94F;  --accent-amber-bg:#30250F;  --accent-amber-border:#5D4719;
+      --accent-red:#EF8E8E;    --accent-red-bg:#361B1B;    --accent-red-border:#6B3232;
+      --accent-green:#95C873;  --accent-green-bg:#1C2A13;  --accent-green-border:#3C5626;
+      --accent-purple:#ADA6F2; --accent-purple-bg:#23213B; --accent-purple-border:#454077;
+      --k0:#8FD3A8; --k0-bg:#132B1D; --k0-bd:#2D5A3E;
+      --k1:#8EC0F5; --k1-bg:#16283C; --k1-bd:#2F5378;
+      --k2:#EDD36A; --k2-bg:#2C260C; --k2-bd:#5E5120;
+      --k3:#F3B27A; --k3-bg:#33210F; --k3-bd:#6B4524;
+      --k4:#F29A9A; --k4-bg:#361B1B; --k4-bd:#6B3232;
+      --grid:rgba(114,170,238,.07);
+      color-scheme:dark;
+    }
+  }
+  body { font-family:var(--font); background:var(--bg); color:var(--text-primary); font-size:14.5px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  .page { max-width:960px; margin:0 auto; padding:0 16px 4rem; }
+  strong, b { font-weight:600; }
+  .muted { color:var(--text-muted); }
+  .hero { margin:0 -16px 0; padding:2.2rem 16px 1.3rem; border-bottom:1px solid var(--border);
+          background-color:var(--bg);
+          background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+          background-size:22px 22px; }
+  .kicker { font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-blue); margin-bottom:8px; }
+  .headline { font-family:var(--display); font-size:30px; font-weight:700; line-height:1.12; margin-bottom:10px; }
+  .lede { font-size:14.5px; color:var(--text-secondary); max-width:760px; margin-bottom:12px; }
+  .lede strong { color:var(--text-primary); }
+  .meta-row { display:flex; flex-wrap:wrap; gap:6px 8px; font-size:12px; }
+  .meta-chip { background:var(--surface); border:1px solid var(--border-strong); border-radius:99px; padding:2px 10px; color:var(--text-secondary); overflow-wrap:anywhere; }
+  .meta-chip strong { color:var(--text-primary); }
+  .bar { position:-webkit-sticky; position:-webkit-sticky;position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--border-strong);
+         margin:0 -16px 1.2rem; padding:8px 16px; display:flex; flex-wrap:wrap; align-items:center; gap:6px 10px; }
+  .bar .lbl { font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); }
+  .bar .sp { flex:1 1 auto; }
+  .btn { font:600 12.5px var(--font); padding:6px 13px; border-radius:99px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-secondary); cursor:pointer; }
+  .btn:hover { border-color:var(--accent-blue); color:var(--accent-blue); }
+  .stage { display:flex; align-items:baseline; gap:10px; margin:2rem 0 .7rem; padding-bottom:6px; border-bottom:2px solid var(--border-strong); }
+  .stage-n { font-family:var(--mono); font-size:12px; font-weight:600; color:#FFFFFF; background:var(--accent-blue); border-radius:6px; padding:1px 7px; }
+  .stage-t { font-family:var(--display); font-size:20px; font-weight:700; line-height:1.2; }
+  .stage-w { margin-left:auto; font-size:11.5px; color:var(--text-muted); text-align:right; }
+  .card { background:var(--surface); border:1px solid var(--border-strong); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+  .card h3 { font-size:13px; font-weight:600; letter-spacing:.02em; margin-bottom:8px; color:var(--text-secondary); }
+  .row { display:flex; flex-wrap:wrap; align-items:center; gap:8px 16px; margin-bottom:10px; }
+  .row:last-child { margin-bottom:0; }
+  .fl { font-size:12.5px; font-weight:600; color:var(--text-secondary); min-width:130px; }
+  .fl small { display:block; font-weight:400; color:var(--text-muted); font-size:11.5px; }
+  input[type=number] { font:500 15px var(--font); color:var(--text-primary); background:var(--surface); border:1px solid var(--border-strong); border-radius:8px; padding:6px 9px; width:100px; text-align:center; }
+  .seg { display:inline-flex; flex-wrap:wrap; border:1px solid var(--border-strong); border-radius:10px; overflow:hidden; }
+  .seg label { position:relative; cursor:pointer; }
+  .seg input { position:absolute; opacity:0; width:1px; height:1px; }
+  .seg span { display:block; padding:6px 13px; font-size:13.5px; font-weight:500; color:var(--text-secondary); border-right:1px solid var(--border); }
+  .seg label:last-child span { border-right:none; }
+  .seg input:checked + span { background:var(--text-primary); color:var(--bg); }
+  .seg input:focus-visible + span { outline:2px solid var(--accent-blue); outline-offset:-2px; }
+  .opz { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:6px; }
+  .opz label { position:relative; cursor:pointer; display:block; }
+  .opz input { position:absolute; opacity:0; width:1px; height:1px; }
+  .opz span { display:block; height:100%; padding:7px 11px; font-size:13.5px; line-height:1.35; font-weight:500; color:var(--text-secondary); border:1px solid var(--border-strong); border-radius:9px; }
+  .opz span small { display:block; font-weight:400; font-size:11.5px; color:var(--text-muted); }
+  .opz input:checked + span { background:var(--text-primary); color:var(--bg); border-color:var(--text-primary); }
+  .opz input:checked + span small { color:var(--bg); opacity:.8; }
+  .opz input:focus-visible + span { outline:2px solid var(--accent-blue); outline-offset:1px; }
+  .chk { display:flex; align-items:flex-start; gap:9px; padding:6px 0; font-size:14px; line-height:1.45; border-bottom:1px dashed var(--border); cursor:pointer; }
+  .chk:last-child { border-bottom:none; }
+  .chk input { margin-top:3px; width:17px; height:17px; flex:0 0 auto; accent-color:var(--accent-blue); }
+  .chk small { display:block; color:var(--text-muted); font-size:12px; }
+  .due { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+  .hide { display:none !important; }
+  .esito { display:flex; flex-wrap:wrap; align-items:center; gap:10px 18px; }
+  .big { font-family:var(--display); font-size:30px; font-weight:700; line-height:1.1; }
+  .big small { font-size:16px; font-weight:600; }
+  .cat { display:inline-block; font-size:12.5px; font-weight:600; border-radius:99px; padding:2px 10px; border:1px solid; }
+  .k0 { color:var(--k0); background:var(--k0-bg); border-color:var(--k0-bd); }
+  .k1 { color:var(--k1); background:var(--k1-bg); border-color:var(--k1-bd); }
+  .k2 { color:var(--k2); background:var(--k2-bg); border-color:var(--k2-bd); }
+  .k3 { color:var(--k3); background:var(--k3-bg); border-color:var(--k3-bd); }
+  .k4 { color:var(--k4); background:var(--k4-bg); border-color:var(--k4-bd); }
+  .kx { color:var(--text-muted); background:var(--surface-alt); border-color:var(--border-strong); }
+  .cor { display:inline-block; font-family:var(--mono); font-size:11px; font-weight:600; color:#FFFFFF; border-radius:4px; padding:0 5px; margin:0 1px; white-space:nowrap; vertical-align:1px; }
+  .c1 { background:var(--cor-1); } .c2a { background:var(--cor-2a); color:#1D1602; } .c2b { background:var(--cor-2b); } .c3 { background:var(--cor-3); }
+  .dv { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.03em; border-radius:4px; padding:0 5px; background:var(--accent-amber-bg); color:var(--accent-amber); border:1px solid var(--accent-amber-border); white-space:nowrap; }
+  .pg { font-family:var(--mono); font-size:11px; color:var(--text-muted); }
+  .nota { border-left:3px solid var(--accent-amber); background:var(--accent-amber-bg); border-radius:0 8px 8px 0; padding:7px 11px; margin-top:8px; font-size:13.5px; }
+  .nota.info { border-left-color:var(--accent-blue); background:var(--accent-blue-bg); }
+  .nota.stop { border-left-color:var(--accent-red); background:var(--accent-red-bg); }
+  .nota.ok { border-left-color:var(--accent-green); background:var(--accent-green-bg); }
+  .nota.inc { border-left-color:var(--accent-purple); background:var(--accent-purple-bg); }
+  .nota strong { color:var(--text-primary); }
+  .passo { display:flex; gap:10px; padding:8px 0; border-bottom:1px dashed var(--border); }
+  .passo:last-child { border-bottom:none; }
+  .passo .ico { flex:0 0 22px; font-weight:700; color:var(--accent-blue); text-align:center; }
+  .passo .tx { flex:1 1 auto; font-size:14px; min-width:0; overflow-wrap:anywhere; }
+  .farm { border:1px solid var(--border-strong); border-radius:10px; padding:10px 12px; margin-top:8px; }
+  .farm.t1 { border-color:var(--accent-amber-border); }
+  .farm.t2 { border-color:var(--accent-red-border); background:var(--surface-alt); }
+  .farm-h { display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; margin-bottom:4px; }
+  .farm-n { font-family:var(--display); font-size:17px; font-weight:700; }
+  .farm.t2 .farm-n { text-decoration:line-through; text-decoration-thickness:1px; color:var(--text-secondary); }
+  .farm dl { display:grid; grid-template-columns:118px 1fr; gap:2px 10px; font-size:13px; }
+  .farm dt { color:var(--text-muted); font-size:12px; }
+  .farm dd { min-width:0; overflow-wrap:anywhere; }
+  .farm .calc { color:var(--accent-blue); font-weight:600; }
+  .grp { font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); margin:14px 0 2px; }
+  .limiti li { margin:4px 0 4px 18px; font-size:13.5px; }
+  .foot { margin-top:2.4rem; padding-top:1rem; border-top:1px solid var(--border-strong); font-size:12px; color:var(--text-muted); line-height:1.7; }
+  .foot strong { color:var(--text-secondary); }
+  .tx .pg, .nota .pg, .farm .pg { white-space:normal; }
+  @media (max-width:640px) {
+    .due { grid-template-columns:1fr; }
+    .headline { font-size:25px; }
+    .stage-w { display:none; }
+    .fl { min-width:0; width:100%; }
+    .farm dl { grid-template-columns:1fr; }
+    .farm dt { margin-top:4px; }
+    .opz { grid-template-columns:1fr; }
+  }
+  @media print { .bar { position:static; } }
+</style>
+<style data-iphone="stile">
+/* L'avviso e' visibile per costruzione: lo nasconde solo la classe che la
+   sentinella mette quando JavaScript esiste, e lo rimostra quando il motore
+   muore. Nell'anteprima dell'iPhone nessuna delle due arriva. */
+#nomotore{background:#FCEBEB;border:1.5px solid #A32D2D;border-radius:10px;
+ padding:12px 15px;margin:0 0 1.1rem;font-size:13.5px;line-height:1.6;color:#0B0B0B;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+#nomotore strong{display:block;color:#A32D2D;font-size:15px;margin-bottom:4px}
+#nomotore p{margin:6px 0 0}
+#nomotore a{color:#A32D2D}
+#nomotore .nmurl{font-family:'SFMono-Regular',Consolas,Menlo,monospace;font-size:.92em;word-break:break-all}
+#nomotore .nmerr{display:block;font-family:'SFMono-Regular',Consolas,Menlo,monospace;
+ font-size:11.5px;color:#A32D2D;margin-top:6px;word-break:break-word}
+#nomotore .nmerr:empty{display:none}
+html.js #nomotore{display:none}
+html.js.motore-ko #nomotore{display:block}
+
+#nmprivacy{background:#E2F4F5;border:1px solid #A7DBDE;border-radius:8px;padding:9px 13px;
+ margin:0 0 1rem;font-size:12.5px;line-height:1.55;color:#0B0B0B;
+ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}
+@media print{#nmprivacy{display:none}}
+</style>
+</head>
+<body>
+<div class="nomotore" id="nomotore" role="alert">
+ <strong>Motore di calcolo non attivo</strong>
+ <p>I calcoli, i filtri e i comandi di questa pagina <b>non funzionano</b>: dove leggi «—» non c'è un
+ valore. Il testo resta leggibile, i numeri che dipendono dai tuoi dati no. Non usare questa pagina
+ per decidere una dose.</p>
+ <p>Su iPhone e iPad succede sempre con un file salvato sul telefono: si apre nell'<b>anteprima</b> —
+ dall'app File, da Mail, da WhatsApp —, che mostra la pagina ma non esegue il motore, e Apple non
+ permette di aprirlo in Safari. Sull'iPhone il tool funziona aperto da questo indirizzo, in Safari: <a class="nmurl" href="https://francescofugetto-ai.github.io/tool-pa-acuta-web/">https://francescofugetto-ai.github.io/tool-pa-acuta-web/</a> — poi Condividi, «Aggiungi alla schermata Home». Dopo la prima apertura funziona anche senza rete. Su computer e Android basta aprire il file.</p>
+ <span class="nmerr" id="nmerr"></span>
+</div>
+<div class="nmprivacy" id="nmprivacy">
+ <b>Quello che scrivi resta su questo dispositivo.</b> La pagina non invia niente in rete e non
+ salva niente: nessun dato esce da qui. Per la stessa ragione, <b>chiudendola il contenuto si
+ perde</b> — copia il referto dove ti serve prima di chiudere.
+</div>
+<div class="page">
+<header class="hero">
+  <div class="kicker">Strumento · Fase acuta · Ipertensione</div>
+  <h1 class="headline">Pressione nella fase acuta — bersaglio, finestra e farmaci</h1>
+  <p class="lede"><strong>Come si usa.</strong> Il passo 1 sceglie il <strong>quadro</strong> e porta la pressione e il tempo: ne escono il <strong>bersaglio</strong> e la <strong>finestra</strong> della linea guida, con i conti fatti. Il passo 2 mostra i <strong>farmaci</strong>: prima quelli che la linea guida nomina per il quadro, poi il repertorio della Tab. S13, con le dosi sul peso e le <strong>controindicazioni che comandano</strong> — un farmaco controindicato va in fondo e non si propone. <strong>Azzera</strong>, in alto, ricomincia.</p>
+  <div class="meta-row">
+    <span class="meta-chip"><strong>Fonte</strong> 2024 ESC Guidelines for the management of elevated blood pressure and hypertension, con il supplementare</span>
+    <span class="meta-chip"><strong>Calcolo</strong> § 10 pp. 3983–3985 · Rec. Table 32 e 33 pp. 3984–3985 · Rec. Table 22 p. 3971 · Suppl. Tab. S13 p. 25</span>
+  </div>
+</header>
+
+<div class="bar" id="bar" aria-live="polite">
+  <span class="lbl">Bersaglio</span> <span id="barBers" class="cat kx">—</span>
+  <span class="lbl">Farmaco</span> <span id="barFarm" class="cat kx">—</span>
+  <span class="sp"></span>
+  <button class="btn" id="azzera" type="button">Azzera</button>
+</div>
+
+<div class="stage"><span class="stage-n">1</span><span class="stage-t">Il quadro, la pressione, il tempo</span><span class="stage-w">§ 10, pp. 3983–3985</span></div>
+<div class="card">
+  <h3>Quadro</h3>
+  <div class="opz">
+    <label><input type="radio" name="quadro" value="emergenza"><span>Emergenza ipertensiva<small>con danno d'organo acuto</small></span></label>
+    <label><input type="radio" name="quadro" value="urgenza"><span>Urgenza ipertensiva<small>senza danno d'organo acuto</small></span></label>
+    <label><input type="radio" name="quadro" value="ictus"><span>Ictus ischemico acuto<small>con o senza riperfusione</small></span></label>
+    <label><input type="radio" name="quadro" value="ich"><span>Emorragia intracerebrale</span></label>
+    <label><input type="radio" name="quadro" value="pe"><span>Pre-eclampsia o eclampsia con crisi ipertensiva</span></label>
+    <label><input type="radio" name="quadro" value="peedema"><span>Pre-eclampsia o eclampsia con edema polmonare</span></label>
+    <label><input type="radio" name="quadro" value="gravsev"><span>Ipertensione severa in gravidanza<small>senza pre-eclampsia</small></span></label>
+    <label><input type="radio" name="quadro" value="feo"><span>Crisi adrenergica da feocromocitoma<small>o paraganglioma</small></span></label>
+    <label><input type="radio" name="quadro" value="cocaina"><span>Da cocaina o metanfetamina<small>simpaticomimetici</small></span></label>
+  </div>
+</div>
+<div class="card">
+  <div class="row">
+    <span class="fl">PA sistolica <small>mmHg</small></span>
+    <input type="number" id="pas" min="60" max="300" step="1" inputmode="numeric" placeholder="es. 200">
+    <span class="fl">PA diastolica <small>mmHg</small></span>
+    <input type="number" id="pad" min="30" max="200" step="1" inputmode="numeric" placeholder="es. 110">
+  </div>
+  <div class="row" id="rowOre">
+    <span class="fl">Ore dall'esordio <small>dei sintomi</small></span>
+    <input type="number" id="ore" min="0" max="2000" step="0.5" inputmode="decimal" placeholder="es. 3">
+  </div>
+  <div class="row" id="rowRip">
+    <span class="fl">Riperfusione</span>
+    <span class="seg">
+      <label><input type="radio" name="rip" value="trombolisi"><span>trombolisi ev</span></label>
+      <label><input type="radio" name="rip" value="trombectomia"><span>trombectomia (± trombolisi)</span></label>
+      <label><input type="radio" name="rip" value="nessuna"><span>nessuna</span></label>
+    </span>
+  </div>
+  <div id="rowGrav">
+    <div class="row">
+      <span class="fl">Minuti dall'inizio <small>del trattamento</small></span>
+      <input type="number" id="minuti" min="0" max="2000" step="5" inputmode="numeric" placeholder="es. 90">
+    </div>
+    <div class="due">
+      <label class="chk"><input type="checkbox" id="eclampsia"><span>Eclampsia<small>convulsioni</small></span></label>
+      <label class="chk"><input type="checkbox" id="proteinuria"><span>Proteinuria</span></label>
+      <label class="chk"><input type="checkbox" id="neuro"><span>Sintomi o segni neurologici</span></label>
+      <label class="chk"><input type="checkbox" id="duefarm"><span>Già due farmaci, senza controllo</span></label>
+    </div>
+  </div>
+</div>
+<div class="card" id="outBers"></div>
+
+<div class="stage"><span class="stage-n">2</span><span class="stage-t">I farmaci</span><span class="stage-w">Suppl. Tab. S13, p. 25</span></div>
+<div class="card">
+  <div class="row">
+    <span class="fl">Peso <small>kg, peso reale</small></span>
+    <input type="number" id="peso" min="30" max="250" step="1" inputmode="decimal" placeholder="es. 75">
+  </div>
+  <h3 style="margin-top:6px">Controindicazioni presenti</h3>
+  <div class="due">
+    <label class="chk"><input type="checkbox" id="asma"><span>Asma</span></label>
+    <label class="chk"><input type="checkbox" id="bav"><span>BAV di II o III grado</span></label>
+    <label class="chk"><input type="checkbox" id="scompenso"><span>Scompenso sistolico</span></label>
+    <label class="chk"><input type="checkbox" id="bradi"><span>Bradicardia</span></label>
+    <label class="chk"><input type="checkbox" id="epatica"><span>Insufficienza epatica</span></label>
+    <label class="chk"><input type="checkbox" id="renale"><span>Insufficienza renale</span></label>
+    <label class="chk"><input type="checkbox" id="glaucoma"><span>Glaucoma</span></label>
+    <label class="chk"><input type="checkbox" id="angioedema"><span>Pregresso angioedema</span></label>
+  </div>
+</div>
+<div class="card" id="outNominati"></div>
+<div class="card" id="outRep"></div>
+
+<div class="stage"><span class="stage-n">3</span><span class="stage-t">Dove la fonte non torna</span><span class="stage-w">incoerenze, mostrate e non risolte</span></div>
+<div class="card" id="outInc"></div>
+<div class="card"><h3>Limiti</h3><ul class="limiti" id="limiti"></ul></div>
+
+<div class="foot">
+  <strong>Fonte.</strong> McEvoy JW, McCarthy CP, Bruno RM, et al. 2024 ESC Guidelines for the management of elevated blood pressure and hypertension. <em>Eur Heart J</em> 2024;45:3912–4018 — emergenza e urgenza (§ 10.1, pp. 3983–3984), emorragia intracerebrale e ictus ischemico (§§ 10.2–10.3 e Rec. Table 32, pp. 3984–3985), pre-eclampsia e ipertensione severa in gravidanza (§ 10.4 e Rec. Table 33, p. 3985; Rec. Table 22, p. 3971; Table 3, p. 3926), feocromocitoma (§ 9.14.4, p. 3983); supplementare, Table S12 (p. 24) e Table S13 (p. 25), quest'ultima adattata dalle linee guida ESC/ESH 2018. Ogni numero mostrato porta la pagina.<br><br>
+  Strumento personale di studio e consultazione: <strong>non sostituisce il giudizio clinico né la scheda tecnica</strong>. Le dosi che la fonte non scrive restano «DA VERIFICARE» e lo strumento non le inventa. Non salva i dati e non li invia in rete.
+</div>
+
+</div>
+<script>
+(function () {
+  "use strict";
+
+  /* ═══ DATI ═══════════════════════════════════════════════════════════════
+     2024 ESC Guidelines for the management of elevated blood pressure and
+     hypertension (pagine stampate) e supplementare (pp. 1-27).
+
+     Emergenza (p. 3983): PA >=180/110 con danno d'organo acuto (HMOD acuto).
+       p. 3984: farmaco ev a breve emivita, titolato, in area ad alta intensita'
+       con monitoraggio continuo o quasi; riduzione rapida, incontrollata o
+       eccessiva non raccomandata; per os ACE-i, ARB o beta-bloccanti a breve
+       durata (captopril, metoprololo) a basse dosi iniziali, in ospedale;
+       ricerca dell'ipertensione secondaria. Nessun bersaglio numerico.
+       Rec. Table 6, p. 3943: con PA >=180/110 escludere l'emergenza, I C.
+       Suppl. Tab. S12, p. 24: work-up.
+     Urgenza (p. 3984): senza danno d'organo acuto; per os secondo l'algoritmo
+       del § 8, di norma senza ricovero; controllo ambulatoriale piu' ravvicinato.
+     Cocaina/metanfetamina (p. 3984): cautela con i beta-bloccanti.
+     Ictus ischemico (p. 3984, Rec. Table 32 pp. 3984-3985):
+       trombolisi: <185/110 prima (prosa), <180/105 nelle 24 h (prosa);
+       trombectomia: <180/105 prima e nelle 24 h (prosa);
+       riperfusione: <180/105 per almeno le prime 24 h dopo il trattamento, IIa B;
+       senza riperfusione e >=220/110: circa -15% nelle prime 24 h, IIa C (p. 3985);
+         prosa p. 3984: solo se >220/120, riduzione iniziale del 10-15% in ore;
+       prime 72 h con <180/105: nessun beneficio dall'avvio (prosa, p. 3984);
+       >=3 giorni e >=140/90, paziente stabile: avviare o reintrodurre (prosa);
+       ictus o TIA con indicazione: iniziare prima della dimissione, I B.
+     Emorragia intracerebrale (p. 3984, Rec. Table 32 p. 3985):
+       entro 6 h: sistolica 140-160, IIa A;
+       sistolica >=220: non ridurre di >70 mmHg nella prima ora, III B.
+     Pre-eclampsia (p. 3985): <160/105 subito; bersaglio entro 150-180 min;
+       magnesio solfato 4 g ev in 5 min, poi 1 g/h ev; oppure 5 g im per gluteo,
+       poi 5 g im ogni 4 h; per l'eclampsia e per la pre-eclampsia con
+       ipertensione severa e proteinuria, o con sintomi/segni neurologici;
+       ipotensione con nifedipina + magnesio; 360 min e due farmaci senza
+       controllo -> terapia intensiva; diuretici da evitare.
+       Rec. Table 33, p. 3985: crisi -> labetalolo o nicardipina ev + magnesio I C;
+       edema polmonare -> nitroglicerina ev I C; ipertensione severa ->
+       labetalolo ev, metildopa os, nifedipina os I C, idralazina ev 2a linea.
+     Gravidanza, soglie dell'emergenza: >160 e >110 (§ 10.4.2, p. 3985);
+       >=160 o >=110, IIa C (Rec. Table 22, p. 3971); >=170 o >=110, I C
+       (Table 3, p. 3926); >=160 e/o >=110 per >=15 min (Suppl. § 5.1.7, p. 20).
+       RAS-bloccanti in gravidanza: III B (Rec. Table 22, p. 3971).
+     Feocromocitoma (p. 3983): alfa-1-bloccante ev (fentolamina, doxazosina,
+       terazosina) o labetalolo; labetalolo ev «1-2 mg/kg twice weekly» in bolo.
+  */
+  var PS13 = "ESC 2024 suppl., Tab. S13, p. 25";
+  var F = [
+    { id:"esmololo", nome:"Esmololo", on:"1–2 min", dur:"10–30 min",
+      dose:"0,5–1 mg/kg in bolo ev; 50–300 µg/kg/min in infusione ev",
+      kg:[ { t:"bolo", a:0.5, b:1, u:"mg" }, { t:"infusione", a:50, b:300, u:"µg/min" } ],
+      ci:["bav","scompenso","asma","bradi"], ciT:"BAV di II o III grado, scompenso sistolico, asma, bradicardia", ae:"bradicardia", bb:true },
+    { id:"metoprololo", nome:"Metoprololo", on:"1–2 min", dur:"5–8 h",
+      dose:"2,5–5 mg in bolo ev in 2 min, ripetibile ogni 5 min fino a un massimo di 15 mg",
+      ci:["bav","scompenso","asma","bradi"], ciT:"BAV di II o III grado, scompenso sistolico, asma, bradicardia", ae:"bradicardia", bb:true },
+    { id:"labetalolo", nome:"Labetalolo", on:"5–10 min", dur:"3–6 h",
+      dose:"0,25–0,5 mg/kg in bolo ev; infusione 2–4 mg/min fino al bersaglio, poi 5–20 mg/h",
+      kg:[ { t:"bolo", a:0.25, b:0.5, u:"mg" } ],
+      ci:["bav","scompenso","asma","bradi"], ciT:"BAV di II o III grado, scompenso sistolico, asma, bradicardia", ae:"broncocostrizione, bradicardia fetale", bb:true },
+    { id:"fenoldopam", nome:"Fenoldopam", on:"5–15 min", dur:"30–60 min",
+      dose:"0,1 µg/kg/min in infusione ev, aumentando ogni 5 min di 0,05–0,1 µg/kg/min fino al bersaglio",
+      kg:[ { t:"inizio", a:0.1, b:0.1, u:"µg/min" }, { t:"incremento", a:0.05, b:0.1, u:"µg/min" } ],
+      cau:["glaucoma"], ciT:"cautela nel glaucoma", ae:"" },
+    { id:"clevidipina", nome:"Clevidipina", on:"2–3 min", dur:"5–15 min",
+      dose:"2 mg/h in infusione ev, aumentando ogni 2 min di 2 mg/h fino al bersaglio",
+      ciT:"", ae:"cefalea, tachicardia riflessa" },
+    { id:"nicardipina", nome:"Nicardipina", on:"5–15 min", dur:"30–40 min",
+      dose:"5–15 mg/h in infusione ev: si parte da 5 mg/h, si aumenta ogni 15–30 min di 2,5 mg (così nella tabella) fino al bersaglio, poi si scende a 3 mg/h",
+      ci:["epatica"], ciT:"insufficienza epatica", ae:"cefalea, tachicardia riflessa" },
+    { id:"nitroglicerina", nome:"Nitroglicerina", on:"1–5 min", dur:"3–5 min",
+      dose:"5–200 µg/min in infusione ev, aumentando di 5 µg/min ogni 5 min",
+      ciT:"", ae:"cefalea, tachicardia riflessa" },
+    { id:"nitroprussiato", nome:"Nitroprussiato", on:"immediato", dur:"1–2 min",
+      dose:"0,3–10 µg/kg/min in infusione ev, aumentando di 0,5 µg/kg/min ogni 5 min fino al bersaglio",
+      kg:[ { t:"infusione", a:0.3, b:10, u:"µg/min" }, { t:"incremento", a:0.5, b:0.5, u:"µg/min" } ],
+      rel:["epatica","renale"], ciT:"insufficienza epatica o renale (relativa)", ae:"intossicazione da cianuro", rene:true },
+    { id:"enalaprilat", nome:"Enalaprilat", on:"5–15 min", dur:"4–6 h",
+      dose:"0,625–1,25 mg in bolo ev",
+      ci:["angioedema"], ciT:"storia di angioedema", ae:"", ras:true },
+    { id:"urapidil", nome:"Urapidil", on:"3–5 min", dur:"4–6 h",
+      dose:"12,5–25 mg in bolo; 5–40 mg/h in infusione continua",
+      ciT:"", ae:"" },
+    { id:"clonidina", nome:"Clonidina", on:"30 min", dur:"4–6 h",
+      dose:"150–300 µg in bolo ev in 5–10 min",
+      ciT:"", ae:"sedazione, ipertensione di rimbalzo" },
+    { id:"fentolamina", nome:"Fentolamina", on:"immediato", dur:"meno di 5 min",
+      dose:"5 mg in bolo ev; boli aggiuntivi ogni 10 min se servono",
+      ciT:"ipersensibilità, infarto miocardico", ciNonValutate:true, ae:"dolore in sede d'iniezione, congestione nasale, bruciore o dolore oculare" }
+  ];
+  var ETI = { asma:"asma", bav:"BAV di II o III grado", scompenso:"scompenso sistolico", bradi:"bradicardia",
+              epatica:"insufficienza epatica", renale:"insufficienza renale", glaucoma:"glaucoma", angioedema:"pregresso angioedema" };
+  var DOM = { pas:[60, 300], pad:[30, 200], ore:[0, 2000], minuti:[0, 2000], peso:[30, 250] };
+  var GRAV = { pe:1, peedema:1, gravsev:1 };
+
+  /* ═══ FUNZIONI PURE ═══════════════════════════════════════════════════ */
+  function fuori(v, k) { return v !== null && (v < DOM[k][0] || v > DOM[k][1]); }
+  function pa(s) {
+    if (s.pas === null || s.pad === null) return { ok:false, perche:"servono sistolica e diastolica" };
+    if (fuori(s.pas, "pas")) return { ok:false, fuori:true, perche:"sistolica fuori dal dominio dello strumento (60–300 mmHg)" };
+    if (fuori(s.pad, "pad")) return { ok:false, fuori:true, perche:"diastolica fuori dal dominio dello strumento (30–200 mmHg)" };
+    if (s.pad >= s.pas) return { ok:false, fuori:true, perche:"la diastolica non può essere uguale o superiore alla sistolica" };
+    return { ok:true, s:s.pas, d:s.pad };
+  }
+  function r0(v) { return Math.round(v); }
+
+  /* soglie della gravidanza: ognuna come la scrive la fonte */
+  function soglieGravidanza(p) {
+    if (!p.ok) return null;
+    return [
+      { t:"&gt;160 <b>e</b> &gt;110 mmHg", f:"§ 10.4.2, p. 3985", cor:null, si:(p.s > 160 && p.d > 110) },
+      { t:"≥160 <b>o</b> ≥110 mmHg: può indicare un'emergenza, ricovero immediato da considerare", f:"Rec. Table 22, p. 3971", cor:["IIa","C"], si:(p.s >= 160 || p.d >= 110) },
+      { t:"≥170 <b>o</b> ≥110 mmHg: è un'emergenza, ricovero raccomandato", f:"Table 3, p. 3926", cor:["I","C"], si:(p.s >= 170 || p.d >= 110) },
+      { t:"≥160 <b>e/o</b> ≥110 mmHg per almeno 15 min", f:"suppl. § 5.1.7, p. 20", cor:null, si:(p.s >= 160 || p.d >= 110) }
+    ];
+  }
+
+  function bersaglio(s) {
+    var q = s.quadro, p = pa(s), o = s.ore;
+    if (q === "") return { chip:"—", k:"kx", perche:"scegli il quadro" };
+    var R = { q:q, p:p };
+    if (q === "ictus") {
+      if (s.rip === "") { R.chip = "—"; R.k = "kx"; R.perche = "indica se c'è riperfusione"; return R; }
+      if (o !== null && fuori(o, "ore")) { R.chip = "—"; R.k = "kx"; R.perche = "ore fuori dal dominio (0–2000)"; return R; }
+      if (o !== null && o >= 72) {
+        R.fase = "tardiva";
+        if (!p.ok) { R.chip = "—"; R.k = "kx"; R.perche = p.perche; return R; }
+        R.avvia = (p.s >= 140 || p.d >= 90);
+        R.chip = R.avvia ? "avviare la terapia" : "&lt;140/90: nessun avvio";
+        R.k = R.avvia ? "k1" : "k0";
+        return R;
+      }
+      R.fase = "acuta";
+      if (s.rip === "trombolisi") { R.chip = "&lt;185/110, poi &lt;180/105"; R.k = "k3"; }
+      else if (s.rip === "trombectomia") { R.chip = "&lt;180/105 prima e per 24 h"; R.k = "k3"; }
+      else {
+        if (!p.ok) { R.chip = "—"; R.k = "kx"; R.perche = p.perche; return R; }
+        R.rec = (p.s >= 220 || p.d >= 110);
+        R.prosa = (p.s > 220 || p.d > 120);
+        R.m15 = { s:r0(p.s * 0.85), d:r0(p.d * 0.85) };
+        R.m10 = { s:r0(p.s * 0.90), d:r0(p.d * 0.90) };
+        R.sotto180 = (p.s < 180 && p.d < 105);
+        if (o === null) { R.chip = "—"; R.k = "kx"; R.perche = "servono le ore dall'esordio"; return R; }
+        R.entro24 = o < 24;
+        if (R.rec && R.entro24) { R.chip = "≈" + R.m15.s + "/" + R.m15.d + " in 24 h"; R.k = "k3"; }
+        else if (R.rec) { R.chip = "oltre 24 h: nessun numero"; R.k = "kx"; }
+        else { R.chip = "non abbassare attivamente"; R.k = "k0"; }
+      }
+      if (p.ok) {
+        R.sopra185 = (p.s >= 185 || p.d >= 110);
+        R.sopra180 = (p.s >= 180 || p.d >= 105);
+        R.sotto180 = !R.sopra180;
+      }
+      return R;
+    }
+    if (q === "ich") {
+      if (!p.ok) { R.chip = "—"; R.k = "kx"; R.perche = p.perche; return R; }
+      if (o !== null && fuori(o, "ore")) { R.chip = "—"; R.k = "kx"; R.perche = "ore fuori dal dominio (0–2000)"; return R; }
+      R.limite = p.s >= 220 ? p.s - 70 : null;
+      R.entro6 = (o === null) ? null : (o <= 6);
+      if (R.entro6 === false) { R.chip = "oltre 6 h: nessun bersaglio"; R.k = "kx"; }
+      else if (p.s > 160) {
+        R.chip = "PAS 140–160" + (R.limite !== null ? ", non &lt;" + R.limite + " in 1 h" : "");
+        R.k = "k3";
+      } else if (p.s >= 140) { R.chip = "già 140–160"; R.k = "k0"; }
+      else { R.chip = "già &lt;140"; R.k = "k0"; }
+      return R;
+    }
+    if (q === "pe" || q === "peedema") {
+      R.chip = "&lt;160/105 in 150–180 min"; R.k = "k3";
+      if (s.minuti !== null && fuori(s.minuti, "minuti")) { R.perche = "minuti fuori dal dominio (0–2000)"; R.minOk = false; }
+      else R.minOk = true;
+      if (p.ok) {
+        R.aBers = (p.s < 160 && p.d < 105);
+        if (R.aBers) { R.chip = "a bersaglio (&lt;160/105)"; R.k = "k0"; }
+        if (R.minOk && s.minuti !== null && !R.aBers) {
+          R.oltre = s.minuti > 180;
+          R.ti = s.minuti >= 360 && s.duefarm;
+          if (R.ti) { R.chip = "terapia intensiva"; R.k = "k4"; }
+        }
+      }
+      R.mg = s.eclampsia || s.proteinuria || s.neuro;
+      R.soglie = soglieGravidanza(p);
+      return R;
+    }
+    if (q === "gravsev") { R.chip = "nessun numero nella fonte"; R.k = "kx"; R.soglie = soglieGravidanza(p); return R; }
+    if (q === "emergenza") {
+      R.chip = "riduzione controllata, ev"; R.k = "k4";
+      if (p.ok) R.defOk = (p.s >= 180 || p.d >= 110);
+      return R;
+    }
+    if (q === "urgenza") { R.chip = "per os, di norma a domicilio"; R.k = "k1"; if (p.ok) R.sopra180 = (p.s >= 180 || p.d >= 110); return R; }
+    if (q === "feo") { R.chip = "nessun numero nella fonte"; R.k = "kx"; return R; }
+    if (q === "cocaina") { R.chip = "nessun numero nella fonte"; R.k = "kx"; return R; }
+    return { chip:"—", k:"kx", perche:"quadro sconosciuto" };
+  }
+
+  /* stato di un farmaco della S13 davanti agli ingressi: 0 libero, 1 cautela, 2 controindicato */
+  function statoFarmaco(f, s) {
+    var t = 0, m = [], i;
+    var ci = f.ci || [], cau = f.cau || [], rel = f.rel || [];
+    for (i = 0; i < ci.length; i++) if (s[ci[i]]) { t = 2; m.push("controindicato: " + ETI[ci[i]] + " <span class=\"pg\">" + PS13 + "</span>"); }
+    for (i = 0; i < rel.length; i++) if (s[rel[i]]) { t = 2; m.push("controindicazione relativa: " + ETI[rel[i]] + " <span class=\"pg\">" + PS13 + "</span>"); }
+    for (i = 0; i < cau.length; i++) if (s[cau[i]]) { if (t < 1) t = 1; m.push("cautela: " + ETI[cau[i]] + " <span class=\"pg\">" + PS13 + "</span>"); }
+    if (f.bb && s.quadro === "cocaina") { if (t < 1) t = 1; m.push("cautela: beta-bloccante con cocaina o metanfetamina <span class=\"pg\">ESC 2024, p. 3984</span>"); }
+    if (f.ras && GRAV[s.quadro]) { t = 2; m.push("RAS-bloccante in gravidanza: non raccomandato " + corPill("III", "B") + " <span class=\"pg\">ESC 2024, Rec. Table 22, p. 3971</span>"); }
+    return { t:t, m:m };
+  }
+  function dosiPeso(f, peso) {
+    if (!f.kg) return null;
+    if (peso === null) return { perche:"inserisci il peso per il conto in mg" };
+    if (fuori(peso, "peso")) return { perche:"peso fuori dal dominio (30–250 kg): nessun conto" };
+    var r = [], i, k, a, b;
+    for (i = 0; i < f.kg.length; i++) {
+      k = f.kg[i]; a = k.a * peso; b = k.b * peso;
+      r.push({ t:k.t, v:(k.a === k.b ? nf(a) : nf(a) + "–" + nf(b)) + " " + k.u });
+    }
+    return { r:r };
+  }
+  function perId(id) { for (var i = 0; i < F.length; i++) if (F[i].id === id) return F[i]; return null; }
+
+  /* i farmaci che la linea guida nomina per il quadro, dove li nomina */
+  function nominati(q) {
+    if (q === "pe") return { cor:["I","C"], f:"Rec. Table 33, p. 3985", voci:[ { id:"labetalolo", via:"ev" }, { id:"nicardipina", via:"ev" } ], mg:true, alt:true };
+    if (q === "peedema") return { cor:["I","C"], f:"Rec. Table 33, p. 3985", voci:[ { id:"nitroglicerina", via:"ev in infusione" } ], mg:true };
+    if (q === "gravsev") return { cor:["I","C"], f:"Rec. Table 33, p. 3985", voci:[
+      { id:"labetalolo", via:"ev" },
+      { nome:"Metildopa", via:"per os", dv:"dose per la crisi non nella fonte" },
+      { nome:"Nifedipina", via:"per os", dv:"dose per la crisi non nella fonte" },
+      { nome:"Idralazina", via:"ev — seconda linea", dv:"la dose ev non è nella Tab. S13" } ] };
+    if (q === "feo") return { cor:null, f:"§ 9.14.4, p. 3983", voci:[
+      { id:"fentolamina", via:"ev — alfa-1-bloccante" },
+      { nome:"Doxazosina", via:"ev — alfa-1-bloccante", dv:"dose non nella fonte" },
+      { nome:"Terazosina", via:"ev — alfa-1-bloccante", dv:"dose non nella fonte" },
+      { id:"labetalolo", via:"ev, bolo in 1 min poi infusione", twice:true } ], alt:true };
+    return null;
+  }
+  /* separa i nominati liberi da quelli controindicati */
+  function scelta(s) {
+    var n = nominati(s.quadro);
+    if (!n) return null;
+    var liberi = [], ko = [], i, v, f, st;
+    for (i = 0; i < n.voci.length; i++) {
+      v = n.voci[i]; f = v.id ? perId(v.id) : null;
+      st = f ? statoFarmaco(f, s) : { t:0, m:[] };
+      (st.t === 2 ? ko : liberi).push({ v:v, f:f, st:st });
+    }
+    return { n:n, liberi:liberi, ko:ko };
+  }
+  function repertorio(s) {
+    var out = [], i;
+    for (i = 0; i < F.length; i++) out.push({ f:F[i], st:statoFarmaco(F[i], s), i:i });
+    out.sort(function (a, b) { return a.st.t - b.st.t || a.i - b.i; });
+    return out;
+  }
+
+  /* ═══ STATO E DISEGNO ═════════════════════════════════════════════════ */
+  function el(id) { return document.getElementById(id); }
+  function ck(id) { var e = el(id); return !!(e && e.checked); }
+  function num(id) {
+    var e = el(id); if (!e) return null;
+    var v = e.value.replace(",", ".").trim();
+    if (v === "") return null;
+    var n = parseFloat(v);
+    return isFinite(n) ? n : null;
+  }
+  function radio(n) { var e = document.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : ""; }
+  function nf(v) { return String(Math.round(v * 100) / 100).replace(".", ","); }
+  function pgs(p) { return ' <span class="pg">' + p + "</span>"; }
+  function corPill(c, l) { var k = { "I":"c1", "IIa":"c2a", "IIb":"c2b", "III":"c3" }[c]; return '<span class="cor ' + k + '">' + c + "</span>" + (l ? ' <span class="cor ' + k + '" style="opacity:.85">' + l + "</span>" : ""); }
+  function nota(g, t) { return '<div class="nota ' + (g || "") + '">' + t + "</div>"; }
+  function passo(i, t) { return '<div class="passo"><span class="ico">' + i + '</span><span class="tx">' + t + "</span></div>"; }
+  function chip(k, t) { return '<span class="cat ' + k + '">' + t + "</span>"; }
+  var DV = '<span class="dv">DA VERIFICARE</span>';
+  var E = "ESC 2024, ";
+
+  function S() {
+    return {
+      quadro:radio("quadro"), pas:num("pas"), pad:num("pad"), ore:num("ore"), rip:radio("rip"),
+      minuti:num("minuti"), eclampsia:ck("eclampsia"), proteinuria:ck("proteinuria"), neuro:ck("neuro"), duefarm:ck("duefarm"),
+      peso:num("peso"), asma:ck("asma"), bav:ck("bav"), scompenso:ck("scompenso"), bradi:ck("bradi"),
+      epatica:ck("epatica"), renale:ck("renale"), glaucoma:ck("glaucoma"), angioedema:ck("angioedema")
+    };
+  }
+
+  function testaEsito(b) {
+    return '<div class="esito">' + chip(b.k, b.chip) + (b.perche ? '<span class="muted">' + b.perche + "</span>" : "") + "</div>";
+  }
+
+  function disegnaBersaglio(s, b) {
+    var h = testaEsito(b), p = b.p;
+    if (!b.q) return h;
+    if (p && p.fuori && b.q !== "ictus" && b.q !== "ich") h += nota("stop", "PA non utilizzabile: " + p.perche + ".");
+    if (b.q === "emergenza") {
+      if (b.defOk === false) h += nota("", "La PA inserita è <b>sotto 180/110</b>: la definizione di emergenza chiede ≥180/110 <b>con</b> danno d'organo acuto" + pgs(E + "p. 3983") + ". Ricontrolla il quadro.");
+      h += passo("1", "Ricovero in un'<b>area ad alta intensità</b> con monitoraggio emodinamico continuo o quasi; farmaco <b>ev a breve emivita</b>, per titolare la risposta" + pgs(E + "p. 3984") + ".");
+      h += passo("2", "Riduzione <b>controllata</b>: quella rapida, incontrollata o eccessiva non è raccomandata perché porta complicanze" + pgs(E + "p. 3984") + ". La linea guida 2024 <b>non dà un bersaglio numerico né una percentuale</b> per l'emergenza in generale: tempi ed entità dipendono dall'organo colpito.");
+      h += passo("3", "Stabilire l'organo o gli organi colpiti, la causa scatenante e le condizioni che cambiano il piano (per esempio la gravidanza)" + pgs(E + "p. 3984") + "; work-up della Tab. S12 (fondo dell'occhio, ECG, emocromo e fibrinogeno, creatinina ed elettroliti, LDH e aptoglobina, ACR e sedimento, test di gravidanza; poi test mirati)" + pgs("ESC 2024 suppl., Tab. S12, p. 24") + ".");
+      h += passo("4", "Dopo: pazienti ad alto rischio, da studiare per l'<b>ipertensione secondaria</b>" + pgs(E + "p. 3984") + ".");
+      h += nota("info", "Con PA ≥180/110 l'emergenza va sempre esclusa " + corPill("I", "C") + pgs(E + "Rec. Table 6, p. 3943") + ".");
+    } else if (b.q === "urgenza") {
+      h += passo("1", "Ipertensione severa <b>senza</b> segni clinici di danno d'organo acuto: va ridotta, ma <b>di norma senza ricovero</b>, con farmaci <b>per os</b> secondo l'algoritmo del § 8, e con un controllo ambulatoriale più ravvicinato" + pgs(E + "p. 3984") + ".");
+      h += passo("2", "In pronto soccorso dolore e agitazione alzano la PA, che si normalizza quando vengono trattati, senza un intervento specifico sulla pressione" + pgs(E + "p. 3984") + ".");
+      if (b.sopra180) h += nota("", "PA ≥180/110: l'emergenza va <b>esclusa</b> prima di trattarla come urgenza " + corPill("I", "C") + pgs(E + "Rec. Table 6, p. 3943") + ".");
+    } else if (b.q === "ictus") {
+      if (!b.fase) return h;
+      if (b.fase === "tardiva") {
+        h += passo("1", "Dal <b>terzo giorno</b>, paziente stabile ancora ≥140/90: <b>avviare o reintrodurre</b> la terapia" + pgs(E + "p. 3984") + "; con l'indicazione, iniziarla <b>prima della dimissione</b> " + corPill("I", "B") + pgs(E + "Rec. Table 32, p. 3984") + ".");
+        if (b.avvia === false) h += nota("ok", "La PA inserita è sotto 140/90: la soglia per avviare non è raggiunta.");
+        return h;
+      }
+      if (s.ore === null) h += nota("", "Ore dall'esordio: <b>—</b>. Senza il tempo non si sa se si è nelle prime 24 h, nelle 72 h o oltre: i bersagli sotto valgono per la fase acuta.");
+      if (s.rip === "trombolisi") {
+        h += passo("1", "<b>Prima della trombolisi: &lt;185/110</b>" + pgs(E + "p. 3984") + (p.ok ? " — " + (b.sopra185 ? "<b>la PA inserita è sopra</b>: " + (p.s >= 185 ? "la sistolica deve scendere di <b>più di " + (p.s - 185) + " mmHg</b>" : "") + (p.s >= 185 && p.d >= 110 ? " e " : "") + (p.d >= 110 ? "la diastolica di <b>più di " + (p.d - 110) + " mmHg</b>" : "") : "la PA inserita è già sotto") : "") + ".");
+        h += passo("2", "<b>Dopo: &lt;180/105 per almeno le prime 24 h</b> dal trattamento, abbassandola con attenzione " + corPill("IIa", "B") + pgs(E + "Rec. Table 32, p. 3984; p. 3984") + ".");
+      } else if (s.rip === "trombectomia") {
+        h += passo("1", "<b>Prima della trombectomia: &lt;180/105</b>, e poi mantenuta nelle 24 h successive — con trombolisi o senza" + pgs(E + "p. 3984") + (p.ok ? " — " + (b.sopra180 ? "<b>la PA inserita è sopra</b>" : "la PA inserita è già sotto") : "") + ".");
+        h += passo("2", "Riperfusione: <b>&lt;180/105 per almeno le prime 24 h</b> dopo il trattamento " + corPill("IIa", "B") + pgs(E + "Rec. Table 32, p. 3984") + ". Le prove dai trial sulla trombectomia sono limitate" + pgs(E + "p. 3984") + ".");
+      } else if (p.ok && s.ore !== null) {
+        if (b.rec && b.entro24) {
+          h += '<div class="esito" style="margin-top:8px"><span class="big">≈' + b.m15.s + "/" + b.m15.d + " <small>mmHg entro 24 h</small></span></div>";
+          h += passo("1", "Senza riperfusione e con PA ≥220/110: abbassarla con attenzione di <b>circa il 15%</b> nelle prime 24 h dall'esordio — da " + p.s + "/" + p.d + " a circa <b>" + b.m15.s + "/" + b.m15.d + "</b> " + corPill("IIa", "C") + pgs(E + "Rec. Table 32, p. 3985") + ".");
+        } else if (b.rec) {
+          h += passo("1", "PA ≥220/110, ma sono passate <b>24 h o più</b>: la raccomandazione del −15% vale per le prime 24 h " + corPill("IIa", "C") + pgs(E + "Rec. Table 32, p. 3985") + ", e per le ore 24–72 la fonte non dà un numero.");
+        } else {
+          h += passo("1", "Senza riperfusione e sotto 220/110: la fonte <b>non indica di abbassare attivamente</b> la PA — l'autoregolazione cerebrale può essere compromessa e la perfusione dipende dalla pressione sistemica" + pgs(E + "p. 3984") + ".");
+        }
+      }
+      if (p.ok && b.sotto180 && s.ore !== null && s.ore < 72) h += nota("info", "Nelle prime 72 h, con PA &lt;180/105, avviare o reintrodurre la terapia <b>non sembra dare beneficio</b>" + pgs(E + "p. 3984") + ".");
+      if (p.fuori) h += nota("stop", "PA non utilizzabile: " + p.perche + ".");
+      h += nota("info", "Dal terzo giorno, se il paziente è stabile e resta ≥140/90: avviare o reintrodurre la terapia" + pgs(E + "p. 3984") + ", prima della dimissione " + corPill("I", "B") + pgs(E + "Rec. Table 32, p. 3984") + ".");
+    } else if (b.q === "ich") {
+      if (!p.ok) return h;
+      if (b.entro6 === false) {
+        h += passo("1", "Sono passate <b>più di 6 h</b>: la raccomandazione sul bersaglio 140–160 vale entro 6 h dall'esordio " + corPill("IIa", "A") + pgs(E + "Rec. Table 32, p. 3985") + ", e per dopo la fonte non dà un bersaglio.");
+      } else {
+        if (b.entro6 === null) h += nota("", "Ore dall'esordio: <b>—</b>. Il bersaglio vale se si comincia <b>entro 6 h</b>.");
+        if (p.s > 160) h += passo("1", "Abbassare subito la sistolica a <b>140–160 mmHg</b>, entro 6 h dall'esordio, per limitare l'espansione dell'ematoma e migliorare l'esito funzionale " + corPill("IIa", "A") + pgs(E + "Rec. Table 32, p. 3985") + ".");
+        else if (p.s >= 140) h += passo("1", "La sistolica è <b>già nel bersaglio 140–160</b> " + corPill("IIa", "A") + pgs(E + "Rec. Table 32, p. 3985") + ".");
+        else h += passo("1", "La sistolica è <b>già sotto 140</b>: il bersaglio della raccomandazione è 140–160 " + corPill("IIa", "A") + pgs(E + "Rec. Table 32, p. 3985") + ", e la fonte non chiede di scendere oltre.");
+      }
+      if (b.limite !== null) {
+        h += '<div class="esito" style="margin-top:8px"><span class="big">≥' + b.limite + ' <small>mmHg di sistolica nella prima ora</small></span></div>';
+        h += nota("stop", "Sistolica ≥220: <b>non ridurla di oltre 70 mmHg</b> nella prima ora dall'inizio del trattamento — da " + p.s + " <b>non sotto " + b.limite + " mmHg</b> " + corPill("III", "B") + pgs(E + "Rec. Table 32, p. 3985") + ". Cadute oltre 70 mmHg si associano a danno renale acuto e peggioramento neurologico precoce" + pgs(E + "p. 3984") + "." + (b.limite > 160 && b.entro6 !== false ? " <b>Nella prima ora il bersaglio 140–160 non si raggiunge</b> senza violare questo limite." : ""));
+      }
+    } else if (b.q === "pe" || b.q === "peedema") {
+      h += passo("1", "Ridurre <b>subito</b> la sistolica a <b>&lt;160</b> e la diastolica a <b>&lt;105 mmHg</b>" + pgs(E + "p. 3985") + ", entro <b>150–180 min</b>" + pgs(E + "p. 3985") + (p.ok ? " — PA inserita " + p.s + "/" + p.d + (b.aBers ? ": <b>a bersaglio</b>" : ": <b>sopra il bersaglio</b>") : "") + ".");
+      if (b.minOk === false) h += nota("stop", b.perche + ".");
+      else if (p.ok && !b.aBers && s.minuti !== null) {
+        if (b.ti) h += nota("stop", "<b>" + s.minuti + " min</b>, due farmaci e PA non controllata: consultare la <b>terapia intensiva</b> per ricovero, stabilizzazione e parto se indicato" + pgs(E + "p. 3985") + ".");
+        else if (s.minuti >= 360) h += nota("", "<b>" + s.minuti + " min</b> senza controllo: se due farmaci non sono bastati, la fonte chiede la <b>terapia intensiva</b> a 360 min" + pgs(E + "p. 3985") + ".");
+        else if (b.oltre) h += nota("", "<b>" + s.minuti + " min</b>: oltre la finestra di 150–180 min per il bersaglio" + pgs(E + "p. 3985") + ". A 360 min, con due farmaci senza controllo, terapia intensiva.");
+        else h += nota("info", "<b>" + s.minuti + " min</b>: dentro la finestra di 150–180 min. A 360 min, con due farmaci senza controllo, terapia intensiva" + pgs(E + "p. 3985") + ".");
+      } else if (s.minuti === null) h += nota("info", "Minuti dall'inizio del trattamento: <b>—</b>. Finestra del bersaglio 150–180 min; a 360 min, con due farmaci senza controllo, terapia intensiva" + pgs(E + "p. 3985") + ".");
+      h += passo("2", "<b>Niente diuretici</b>: nella pre-eclampsia il volume plasmatico è ridotto" + pgs(E + "p. 3985") + ".");
+      h += passo("3", "La pre-eclampsia si cura con il parto: valutarlo se indicato" + pgs(E + "p. 3985") + ".");
+    } else if (b.q === "gravsev") {
+      h += passo("1", "Ipertensione severa in gravidanza senza pre-eclampsia: può servire una terapia acuta; si associa a esiti avversi materni e perinatali indipendenti dalla pre-eclampsia" + pgs(E + "p. 3985") + ". La fonte <b>non dà un bersaglio numerico</b> né una finestra per questo quadro.");
+      h += passo("2", "Se c'è pre-eclampsia, il quadro è l'altro: bersaglio &lt;160/105 entro 150–180 min" + pgs(E + "p. 3985") + ".");
+    } else if (b.q === "feo") {
+      var labKo = statoFarmaco(perId("labetalolo"), s).t === 2;
+      h += passo("1", "La crisi adrenergica è un'emergenza ipertensiva: <b>alfa-1-bloccante ev</b> (fentolamina, doxazosina o terazosina) <b>oppure labetalolo</b>" + pgs(E + "p. 3983") + ". La fonte non dà un bersaglio numerico per questo quadro.");
+      if (labKo) h += nota("stop", "<b>Qui il labetalolo è controindicato</b> da quanto hai segnato" + pgs(PS13) + ": resta l'alfa-1-bloccante ev.");
+      else h += passo("2", "Il labetalolo, titolato in infusione, ha anche azione alfa-bloccante ed evita la tachicardia col beta-blocco" + pgs(E + "p. 3983") + ".");
+      h += passo("3", "Dopo: exeresi del tumore con preparazione farmacologica adeguata; attenzione all'ipovolemia periferica e all'ipotensione dopo l'exeresi" + pgs(E + "p. 3983") + ".");
+    } else if (b.q === "cocaina") {
+      h += passo("1", "Rialzi acuti e severi da simpaticomimetici come metanfetamina o cocaina: <b>cautela con i beta-bloccanti</b>" + pgs(E + "p. 3984") + ". La fonte non dà un bersaglio numerico né un farmaco di scelta.");
+      h += passo("2", "Se c'è danno d'organo acuto, valgono anche le regole dell'emergenza (riduzione controllata, ev, area monitorata)" + pgs(E + "p. 3984") + "; ricerca delle sostanze nelle urine" + pgs("ESC 2024 suppl., Tab. S12, p. 24") + ".");
+    }
+    return h;
+  }
+
+  function schedaFarmaco(f, st, peso, extra) {
+    var cls = "farm" + (st.t ? " t" + st.t : "");
+    var tag = st.t === 2 ? chip("k4", "non proposto") : (st.t === 1 ? chip("k3", "cautela") : "");
+    var h = '<div class="' + cls + '" data-farmaco="' + f.id + '"><div class="farm-h"><span class="farm-n">' + f.nome + "</span>" + tag + (extra || "") + "</div>";
+    if (st.m.length) h += '<div style="font-size:13px;margin-bottom:4px">' + st.m.join("<br>") + "</div>";
+    h += "<dl>";
+    h += "<dt>Inizio · durata</dt><dd>" + f.on + " · " + f.dur + "</dd>";
+    h += "<dt>Dose</dt><dd>" + f.dose + pgs(PS13);
+    var dp = dosiPeso(f, peso);
+    if (dp && st.t === 2) h += '<br><span class="muted">— conto sul peso non fatto: il farmaco è controindicato da quanto hai segnato</span>';
+    else if (dp) {
+      if (dp.r) {
+        var c = [];
+        for (var i = 0; i < dp.r.length; i++) c.push(dp.r[i].t + " <b>" + dp.r[i].v + "</b>");
+        h += '<br><span class="calc">Per ' + nf(peso) + " kg di peso reale: " + c.join(" · ") + "</span>";
+      } else h += '<br><span class="muted">— ' + dp.perche + "</span>";
+    }
+    h += "</dd>";
+    h += "<dt>Controindicazioni</dt><dd>" + (f.ciT ? f.ciT : '<span class="muted">nessuna nella tabella</span>') + (f.ciNonValutate ? ' <span class="muted">(non fra gli ingressi: valutale tu)</span>' : "") + "</dd>";
+    h += "<dt>Effetti avversi</dt><dd>" + (f.ae ? f.ae : '<span class="muted">nessuno nella tabella</span>') + "</dd>";
+    h += "<dt>Rene</dt><dd>" + (f.rene ? "insufficienza renale: controindicazione <b>relativa</b>" + pgs(PS13) : "non riportato dalla fonte — " + DV) + "</dd>";
+    h += "</dl></div>";
+    return h;
+  }
+  function schedaSenzaS13(v, s) {
+    var h = '<div class="farm" data-farmaco="' + v.nome.toLowerCase() + '"><div class="farm-h"><span class="farm-n">' + v.nome + '</span><span class="muted">' + v.via + "</span></div><dl>";
+    h += "<dt>Dose</dt><dd>" + v.dv + " — " + DV + "</dd>";
+    h += "<dt>Controindicazioni</dt><dd>non nella Tab. S13 — " + DV + "</dd>";
+    h += "<dt>Rene</dt><dd>non riportato dalla fonte — " + DV + "</dd></dl></div>";
+    return h;
+  }
+
+  function disegnaNominati(s, b) {
+    var q = s.quadro, h = "<h3>Che cosa nomina la linea guida per questo quadro</h3>";
+    if (q === "") return h + '<div class="esito">' + chip("kx", "—") + '<span class="muted">scegli il quadro</span></div>';
+    if (q === "urgenza") return h + nota("info", "Nessun farmaco ev: nell'urgenza si usa la via <b>orale</b>, secondo l'algoritmo del § 8 della linea guida" + pgs(E + "p. 3984") + ". Il repertorio della Tab. S13 è per le emergenze.");
+    if (q === "emergenza") return h + nota("info", "La linea guida <b>non nomina un farmaco</b> per l'emergenza in generale: rimanda alla Tab. S13" + pgs(E + "p. 3984") + ", che elenca i farmaci ma <b>non li associa ai quadri</b>. Il repertorio è sotto.") +
+      nota("", "In alternativa all'ev funzionano anche <b>per os</b> ACE-inibitori, ARB o beta-bloccanti a breve durata d'azione (captopril, metoprololo), <b>a basse dosi iniziali e in ospedale</b>: questi pazienti possono essere molto sensibili" + pgs(E + "p. 3984") + ". Dosi per os: non nella fonte — " + DV + "." +
+        (s.angioedema ? " Pregresso angioedema segnato: la Tab. S13 lo dà come controindicazione dell'enalaprilat (ACE-inibitore); per il captopril la fonte non lo dice — " + DV + "." : "") +
+        ((s.asma || s.bav || s.scompenso || s.bradi) ? " Il metoprololo ev è controindicato da quanto hai segnato" + pgs(PS13) + "; per la via orale la fonte non lo dice — " + DV + "." : ""));
+    if (q === "ictus" || q === "ich") return h + nota("info", "La linea guida dà il bersaglio ma <b>non nomina un farmaco</b> per " + (q === "ich" ? "l'emorragia intracerebrale" : "l'ictus ischemico") + " (§§ 10.2–10.3" + pgs(E + "p. 3984") + "). Il repertorio della Tab. S13 è sotto: la tabella non associa farmaco e quadro.");
+    if (q === "cocaina") return h + nota("", "La linea guida non nomina un farmaco: chiede solo <b>cautela con i beta-bloccanti</b>" + pgs(E + "p. 3984") + ". Nel repertorio sotto esmololo, metoprololo e labetalolo sono segnati «cautela».");
+
+    var sc = scelta(s), n = sc.n, i;
+    h += nota("info", "Nominati " + (n.cor ? corPill(n.cor[0], n.cor[1]) + " " : "") + pgs(E + n.f) + (q === "feo" ? "; la fonte non dà una classe per questa scelta." : "."));
+    for (i = 0; i < sc.liberi.length; i++) {
+      var x = sc.liberi[i];
+      if (x.f) {
+        var ex = '<span class="muted">' + x.v.via + "</span>";
+        h += schedaFarmaco(x.f, x.st, s.peso, ex);
+        if (x.v.twice) h += nota("inc", "Nel § 9.14.4 il labetalolo ev è «1–2 mg/kg <b>twice weekly</b>» in bolo in 1 min, poi infusione" + pgs(E + "p. 3983") + ": «due volte alla settimana» non ha senso per un bolo in crisi, e la dose non coincide con la Tab. S13. Lo strumento mostra la dose della S13 e non fa il conto su quella del testo; la frequenza è " + DV + ".");
+      } else h += schedaSenzaS13(x.v, s);
+    }
+    if (n.alt && sc.liberi.length === 0) h += nota("stop", "<b>Nessuno dei farmaci nominati</b> è utilizzabile con le controindicazioni segnate. La linea guida non nomina un'alternativa per questo quadro: la scelta resta clinica, sul repertorio della Tab. S13 qui sotto.");
+    if (n.mg) {
+      h += '<div class="grp">Magnesio solfato</div>';
+      h += passo("Mg", "<b>4 g ev in 5 min, poi 1 g/h ev</b>; oppure <b>5 g im in ciascun gluteo, poi 5 g im ogni 4 h</b>" + pgs(E + "p. 3985") + (q === "pe" ? ". Con labetalolo o nicardipina nella crisi " + corPill("I", "C") + pgs(E + "Rec. Table 33, p. 3985") : "") + ".");
+      h += nota(b.mg ? "info" : "", "Il testo lo raccomanda per l'<b>eclampsia</b> e per la pre-eclampsia con ipertensione severa e <b>proteinuria</b>, o con <b>sintomi o segni neurologici</b>" + pgs(E + "p. 3985") + (b.mg ? ": " + motiviMg(s).join(", ") + "." : ": <b>nessuno dei tre è segnato</b>.") );
+      h += nota(s.renale ? "stop" : "", "<b>Rene:</b> la fonte non dà un aggiustamento del magnesio per la funzione renale — " + DV + (s.renale ? ". <b>Insufficienza renale segnata</b>: verificare prima della dose di mantenimento." : "."));
+    }
+    if (GRAV[q]) h += nota("", "Rischio di <b>ipotensione</b> con magnesio e nifedipina insieme" + pgs(E + "p. 3985") + ".");
+    if (q === "gravsev") h += nota("info", "Labetalolo e idralazina ev danno velocità di controllo diverse; l'idralazina può associarsi a più eventi perinatali avversi; la nifedipina sembra abbassare di più la PA con meno complicanze neonatali del labetalolo" + pgs(E + "p. 3985") + ".");
+    if (q === "peedema") h += nota("info", "Se c'è anche una crisi ipertensiva, per la crisi la raccomandazione è labetalolo o nicardipina ev con magnesio " + corPill("I", "C") + pgs(E + "Rec. Table 33, p. 3985") + ": guardali nel repertorio, con le loro controindicazioni.");
+    if (sc.ko.length) {
+      h += '<div class="grp">Nominati ma controindicati da quanto hai segnato — non proposti</div>';
+      for (i = 0; i < sc.ko.length; i++) h += schedaFarmaco(sc.ko[i].f, sc.ko[i].st, s.peso, '<span class="muted">' + sc.ko[i].v.via + "</span>");
+    }
+    return h;
+  }
+  function motiviMg(s) {
+    var m = [];
+    if (s.eclampsia) m.push("eclampsia");
+    if (s.proteinuria) m.push("proteinuria");
+    if (s.neuro) m.push("segni neurologici");
+    return m;
+  }
+
+  function disegnaRep(s) {
+    var h = "<h3>Repertorio — farmaci ev delle emergenze (Tab. S13)</h3>";
+    if (s.quadro === "") return h + '<div class="esito">' + chip("kx", "—") + '<span class="muted">scegli il quadro</span></div>';
+    if (s.quadro === "urgenza") return h + '<p class="muted" style="font-size:13.5px">Nell\'urgenza non si usano i farmaci ev della Tab. S13: la via è orale' + pgs(E + "p. 3984") + ".</p>";
+    h += '<p class="muted" style="font-size:13px">La tabella elenca i farmaci più usati nelle emergenze, adattata dalle linee guida ESC/ESH 2018, e <b>non dice quale usare in quale quadro</b>: qui non c\'è un farmaco «di scelta». Ordine: senza controindicazioni segnate, poi con cautela, poi controindicati.</p>';
+    var r = repertorio(s), g = -1, tit = ["Nessuna controindicazione fra quelle segnate", "Con cautela", "Controindicati da quanto hai segnato — non proposti"];
+    for (var i = 0; i < r.length; i++) {
+      if (r[i].st.t !== g) { g = r[i].st.t; h += '<div class="grp">' + tit[g] + "</div>"; }
+      h += schedaFarmaco(r[i].f, r[i].st, s.peso, "");
+    }
+    return h;
+  }
+
+  function disegnaInc(s, b) {
+    var h = "<h3>Incoerenze della fonte per questo quadro</h3>", q = s.quadro, n = 0;
+    if (q === "ictus" && s.rip === "nessuna") {
+      n++;
+      var p = b.p;
+      var t = "<b>Ictus senza riperfusione.</b> La Rec. Table 32 dice ≥220/110 e <b>circa −15% nelle prime 24 h</b> " + corPill("IIa", "C") + pgs(E + "p. 3985") + "; la prosa dice «estremamente alta, per esempio &gt;220/120» e una riduzione iniziale del <b>10–15% in alcune ore</b>" + pgs(E + "p. 3984") + ".";
+      if (p && p.ok) {
+        t += "<br>Con " + p.s + "/" + p.d + ": raccomandazione " + (b.rec ? "<b>soddisfatta</b> → ≈" + b.m15.s + "/" + b.m15.d : "non soddisfatta") +
+             "; prosa " + (b.prosa ? "<b>soddisfatta</b> → sistolica ≈" + b.m15.s + "–" + b.m10.s + ", diastolica ≈" + b.m15.d + "–" + b.m10.d : "non soddisfatta") + ".";
+        if (b.rec !== b.prosa) t += " <b>Le due soglie qui danno risposte diverse.</b>";
+      }
+      t += " Lo strumento segue la raccomandazione e mostra la prosa.";
+      h += nota("inc", t);
+    }
+    if (GRAV[q]) {
+      n++;
+      var sg = b.soglie, u = "<b>Soglie dell'emergenza in gravidanza: la fonte ne dà quattro.</b>";
+      if (sg) {
+        u += "<ul class=\"limiti\" style=\"margin-top:4px\">";
+        for (var i = 0; i < sg.length; i++) u += "<li>" + sg[i].t + (sg[i].cor ? " " + corPill(sg[i].cor[0], sg[i].cor[1]) : "") + pgs(E + sg[i].f) + " — con " + b.p.s + "/" + b.p.d + ": <b>" + (sg[i].si ? "sì" : "no") + "</b></li>";
+        u += "</ul>";
+      } else {
+        u += " &gt;160 e &gt;110 (§ 10.4.2, p. 3985); ≥160 o ≥110 " + corPill("IIa", "C") + " (Rec. Table 22, p. 3971); ≥170 o ≥110 " + corPill("I", "C") + " (Table 3, p. 3926); ≥160 e/o ≥110 per ≥15 min (suppl. § 5.1.7, p. 20). Inserisci la PA per vederle applicate.";
+      }
+      h += nota("inc", u);
+    }
+    if (q === "feo") {
+      n++;
+      h += nota("inc", "<b>Labetalolo nel feocromocitoma.</b> «1–2 mg/kg twice weekly» in bolo" + pgs(E + "p. 3983") + " contro 0,25–0,5 mg/kg in bolo" + pgs(PS13) + ": frequenza senza senso per una crisi e dose diversa. Lo strumento mostra la dose della S13; quella del testo è " + DV + ".");
+    }
+    if (q !== "" && q !== "urgenza") {
+      n++;
+      h += nota("inc", "<b>Nicardipina.</b> La Tab. S13 scrive l'incremento come «2,5 mg» e non «2,5 mg/h»" + pgs(PS13) + ": lo strumento lo riporta così.");
+    }
+    if (!n) h += '<p class="muted" style="font-size:13.5px">' + (q === "" ? "— scegli il quadro." : "Nessuna incoerenza della fonte riguarda questo quadro.") + "</p>";
+    return h;
+  }
+
+  function disegna() {
+    var s = S(), b = bersaglio(s);
+    var q = s.quadro;
+    el("rowOre").className = "row" + ((q === "ictus" || q === "ich") ? "" : " hide");
+    el("rowRip").className = "row" + (q === "ictus" ? "" : " hide");
+    el("rowGrav").className = (q === "pe" || q === "peedema") ? "" : "hide";
+
+    el("outBers").innerHTML = "<h3>Bersaglio e finestra</h3>" + disegnaBersaglio(s, b);
+    el("outNominati").innerHTML = disegnaNominati(s, b);
+    el("outRep").innerHTML = disegnaRep(s);
+    el("outInc").innerHTML = disegnaInc(s, b);
+
+    var lim = [];
+    lim.push("Il <b>quadro lo scegli tu</b>: lo strumento non decide se c'è danno d'organo acuto.");
+    lim.push("«≥220/110», «≥180/110» e «≥140/90» sono letti come sistolica <b>o</b> diastolica oltre la soglia; «&lt;185/110» e «&lt;180/105» come entrambe sotto. La fonte non precisa «e» o «o».");
+    lim.push("Le finestre dell'ictus contano le ore dall'esordio; le 24 h della riperfusione contano dal trattamento, che lo strumento non chiede.");
+    lim.push("Le <b>dosi in mg/kg sono sul peso reale</b>, come le scrive la Tab. S13; nessun aggiustamento per peso aggiustato.");
+    lim.push("<b>Rene</b>: la Tab. S13 lo nomina solo per il nitroprussiato (controindicazione relativa). Per gli altri farmaci e per il magnesio nessun aggiustamento è riportato — " + DV + ", e lo strumento non ne inventa.");
+    lim.push("Le controindicazioni della fentolamina (ipersensibilità, infarto miocardico) non sono fra gli ingressi.");
+    el("limiti").innerHTML = "<li>" + lim.join("</li><li>") + "</li>";
+
+    function bar(id, k, t) { var e = el(id); e.className = "cat " + k; e.innerHTML = t; }
+    bar("barBers", b.k || "kx", b.chip || "—");
+    var bf = "—", kf = "kx";
+    if (q === "urgenza") { bf = "per os"; kf = "k1"; }
+    else if (q !== "") {
+      var sc = scelta(s);
+      if (sc) {
+        var nn = [];
+        for (var i = 0; i < sc.liberi.length; i++) nn.push(sc.liberi[i].f ? sc.liberi[i].f.nome.toLowerCase() : sc.liberi[i].v.nome.toLowerCase());
+        if (nn.length) { bf = nn.join(" / ") + (sc.n.mg ? " + Mg" : ""); kf = "k1"; }
+        else { bf = "nominati controindicati"; kf = "k4"; }
+      } else { bf = "repertorio S13"; kf = "kx"; }
+    }
+    bar("barFarm", kf, bf);
+  }
+
+  document.addEventListener("input", disegna);
+  document.addEventListener("change", disegna);
+  el("azzera").addEventListener("click", function () {
+    var ins = document.querySelectorAll("input");
+    for (var i = 0; i < ins.length; i++) {
+      if (ins[i].type === "checkbox" || ins[i].type === "radio") ins[i].checked = false;
+      else ins[i].value = "";
+    }
+    disegna();
+    window.scrollTo(0, 0);
+  });
+
+  window.ACUTO_MOTORE = { bersaglio:bersaglio, statoFarmaco:statoFarmaco, dosiPeso:dosiPeso, scelta:scelta, repertorio:repertorio };
+  disegna();
+})();
+</script>
+<script data-iphone="web">
+// Solo da un indirizzo https, cioe' dalla pagina pubblicata: aperto come file
+// il tool non cerca ne' manifest ne' service worker, che accanto al file non
+// ci sono. Un errore qui non deve fermare niente: e' un di piu'.
+(function(){
+if(location.protocol!=="https:") return;
+try{
+  var t=document.getElementsByTagName("head")[0];
+  var m=document.createElement("link"); m.rel="manifest"; m.href="manifest.webmanifest";
+  var i=document.createElement("link"); i.rel="apple-touch-icon"; i.href="icona-180.png";
+  t.appendChild(m); t.appendChild(i);
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js")["catch"](function(){});
+}catch(e){}
+})();
+</script>
+<script data-iphone="fine">document.documentElement.className+=" motore-ok";</script>
+</body>
+</html>
